@@ -28,13 +28,13 @@
             'translate-x-0 opacity-100': !showDemo,
             'translate-x-full opacity-0': showDemo
           }"
-          class="absolute inset-0 p-8 transition-all duration-300 ease-in-out"
+          class="absolute inset-0 p-8 transition-all duration-300 ease-in-out overflow-y-auto"
         >
           <h2 class="text-2xl font-semibold mb-6 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
             Implementation
           </h2>
           <div class="relative">
-            <pre class="bg-gray-900/80 p-6 pt-14 rounded-xl overflow-x-auto font-mono text-sm">
+            <pre class="bg-gray-900/80 p-6 pt-14 rounded-xl overflow-x-auto font-mono text-sm max-h-[500px] overflow-y-auto">
               <code class="language-typescript">{{ algorithmDetails.implementation }}</code>
             </pre>
             <div class="absolute top-4 right-4 space-x-2">
@@ -66,19 +66,7 @@
           }"
           class="absolute inset-0 p-8 transition-all duration-300 ease-in-out overflow-y-auto max-h-full"
         >
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-semibold bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
-              Demo
-            </h2>
-            <button 
-              @click="resetDemo"
-              class="px-3 py-1.5 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors text-sm group"
-            >
-              <span class="group-hover:scale-95 transition-transform inline-block">
-                Reset Demo
-              </span>
-            </button>
-          </div>
+          
           
           <!-- Demo Content -->
           <div 
@@ -86,11 +74,11 @@
             :class="{ 'opacity-50': isSorting }"
           >
             <!-- Demo Controls Section -->
-            <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-4 border border-gray-700/50 space-y-4">
+            <div class="space-y-4">
               <!-- Header and Reset -->
               <div class="flex justify-between items-center">
                 <h2 class="text-lg font-semibold bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
-                  Demo Controls
+                  Demo
                 </h2>
                 <button 
                   @click="resetDemo"
@@ -841,5 +829,33 @@ const resetDemo = () => {
 
 .relative {
   animation: fadeIn 0.3s ease-out forwards;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.5) rgba(17, 24, 39, 0.3);
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(17, 24, 39, 0.3);
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
 }
 </style>
