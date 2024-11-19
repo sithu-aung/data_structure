@@ -1,20 +1,20 @@
 <template>
   <div class="space-y-8">
-    <header class="text-center">
-      <h1 class="text-4xl font-bold mb-4">Sorting Algorithms</h1>
-      <p class="text-xl text-gray-300">Learn different sorting techniques and their implementations</p>
+    <header class="text-center px-4">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4">Sorting Algorithms</h1>
+      <p class="text-lg md:text-xl text-gray-300">Learn different sorting techniques and their implementations</p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-4">
       <div 
         v-for="algorithm in sortingAlgorithms" 
         :key="algorithm.title"
         @click="goToDetail(algorithm.route)"
-        class="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-all cursor-pointer transform hover:-translate-y-1 border border-gray-700"
+        class="bg-gray-800 rounded-xl p-4 md:p-6 hover:bg-gray-700 transition-all cursor-pointer transform hover:-translate-y-1 border border-gray-700"
       >
-        <div class="text-4xl mb-4">{{ algorithm.icon }}</div>
-        <h3 class="text-xl font-semibold mb-2">{{ algorithm.title }}</h3>
-        <p class="text-gray-400">{{ algorithm.description }}</p>
+        <div class="text-3xl md:text-4xl mb-4">{{ algorithm.icon }}</div>
+        <h3 class="text-lg md:text-xl font-semibold mb-2">{{ algorithm.title }}</h3>
+        <p class="text-sm md:text-base text-gray-400">{{ algorithm.description }}</p>
       </div>
     </div>
   </div>

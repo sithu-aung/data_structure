@@ -1,11 +1,11 @@
 <template>
   <div class="space-y-8">
-    <header class="text-center">
-      <h1 class="text-4xl font-bold mb-4">{{ algorithmDetails.title }}</h1>
-      <p class="text-xl text-gray-300">{{ algorithmDetails.description }}</p>
+    <header class="text-center px-4">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ algorithmDetails.title }}</h1>
+      <p class="text-lg md:text-xl text-gray-300">{{ algorithmDetails.description }}</p>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4">
       <!-- Info Card -->
       <div class="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50 space-y-6 hover:shadow-lg hover:shadow-purple-500/10 transition-all">
         <div v-for="(value, key) in infoItems" :key="key" class="group">

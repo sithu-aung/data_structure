@@ -43,14 +43,14 @@ const dataStructures = [
 
 <template>
   <div class="space-y-8">
-    <header class="text-center mb-12">
-      <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
+    <header class="text-center mb-12 px-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
         Master Data Structures
       </h1>
-      <p class="text-xl text-gray-300">Interactive learning journey through fundamental data structures</p>
+      <p class="text-lg md:text-xl text-gray-300">Interactive learning journey through fundamental data structures</p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-4">
       <DataStructureCard
         v-for="ds in dataStructures"
         :key="ds.title"
