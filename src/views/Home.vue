@@ -31,6 +31,12 @@ const dataStructures = [
     description: 'Discover network representations and graph algorithms.',
     icon: '🕸️',
     route: '/data-structure/graph'
+  },
+  {
+    title: 'Sorting Algorithms',
+    description: 'Learn and visualize different sorting techniques and their complexities.',
+    icon: '🔄',
+    route: '/sorting-algorithms'
   }
 ]
 </script>

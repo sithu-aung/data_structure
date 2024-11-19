@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const isOpen = ref(false)
 </script>
 
 <template>
@@ -28,6 +26,12 @@ const isOpen = ref(false)
               class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
               {{ ds.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
+            </router-link>
+            <router-link 
+              to="/sorting-algorithms" 
+              class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Sorting Algorithms
             </router-link>
           </div>
         </div>
