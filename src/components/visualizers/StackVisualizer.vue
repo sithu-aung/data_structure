@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 
-const stack = ref<string[]>([])
+const stack = ref([])
 
 const push = () => {
   const value = String.fromCharCode(65 + stack.value.length)

@@ -1,20 +1,20 @@
-<script setup lang="ts">
+<script setup>
 import { ref, watch } from 'vue'
 import { useChallengesStore } from '../stores/challenges'
 
 const props = defineProps<{
   challenge: {
-    title: string
-    description: string
-    difficulty: string
-    starterCode: string
-    solution: string
-    testCases: { input: any; expected: any }[]
+    title,
+    description,
+    difficulty,
+    starterCode,
+    solution,
+    testCases: { input, expected }
   }
-}>()
+};
 
 const code = ref(props.challenge.starterCode)
-const testResults = ref<{ passed: boolean; message: string }[]>([])
+const testResults = ref<{ passed, message }([])
 const showSolution = ref(false)
 
 const runTests = async () => {

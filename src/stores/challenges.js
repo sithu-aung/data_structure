@@ -1,14 +1,5 @@
 import { defineStore } from 'pinia'
 
-interface Challenge {
-  title: string
-  description: string
-  difficulty: 'Easy' | 'Medium' | 'Hard'
-  starterCode: string
-  solution: string
-  testCases: { input: any; expected: any }[]
-}
-
 export const useChallengesStore = defineStore('challenges', {
   state: () => ({
     challenges: {
@@ -17,28 +8,10 @@ export const useChallengesStore = defineStore('challenges', {
           title: 'Reverse a Linked List',
           description: 'Implement a function to reverse a singly linked list.',
           difficulty: 'Medium',
-          starterCode: `class ListNode {
-  val: number
-  next: ListNode | null
-  constructor(val: number) {
-    this.val = val
-    this.next = null
-  }
-}
-
-function reverseList(head: ListNode | null): ListNode | null {
+          starterCode: `function reverseList(head) {
   // Your code here
 }`,
-          solution: `class ListNode {
-  val: number
-  next: ListNode | null
-  constructor(val: number) {
-    this.val = val
-    this.next = null
-  }
-}
-
-function reverseList(head: ListNode | null): ListNode | null {
+          solution: `function reverseList(head) {
   let prev = null
   let current = head
   
@@ -68,12 +41,12 @@ function reverseList(head: ListNode | null): ListNode | null {
           title: 'Valid Parentheses',
           description: 'Check if a string has valid parentheses using a stack.',
           difficulty: 'Easy',
-          starterCode: `function isValid(s: string): boolean {
+          starterCode: `function isValid(s) {
   // Your code here
 }`,
-          solution: `function isValid(s: string): boolean {
-  const stack: string[] = []
-  const pairs: { [key: string]: string } = {
+          solution: `function isValid(s) {
+  const stack = []
+  const pairs = {
     '(': ')',
     '[': ']',
     '{': '}'
@@ -108,6 +81,6 @@ function reverseList(head: ListNode | null): ListNode | null {
           ]
         }
       ]
-    } as Record<string, Challenge[]>
+    }
   })
 })

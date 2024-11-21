@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import {  computed, type Component } from 'vue'
+<script setup>
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import LinkedListVisualizer from '../components/visualizers/LinkedListVisualizer.vue'
 import StackVisualizer from '../components/visualizers/StackVisualizer.vue'
@@ -8,23 +8,17 @@ import TreeVisualizer from '../components/visualizers/TreeVisualizer.vue'
 import GraphVisualizer from '../components/visualizers/GraphVisualizer.vue'
 
 const route = useRoute()
-const type = computed(() => route.params.type as string)
+const type = computed(() => route.params.type)
 
-const visualizers: Record<string, Component> = {
+const visualizers = {
   'linked-list': LinkedListVisualizer,
   'stack': StackVisualizer,
   'queue': QueueVisualizer,
   'tree': TreeVisualizer,
   'graph': GraphVisualizer
-} as const
-
-interface DataStructureContent {
-  title: string;
-  description: string;
-  realWorld: string[];
 }
 
-const content: Record<string, DataStructureContent> = {
+const content = {
   'linked-list': {
     title: 'Linked Lists',
     description: 'A linked list is a linear data structure where elements are stored in nodes, and each node points to the next node in the sequence.',
@@ -70,7 +64,7 @@ const content: Record<string, DataStructureContent> = {
       'Network routing protocols'
     ]
   }
-} as const
+}
 
 const currentContent = computed(() => {
   if (!(type.value in content)) {

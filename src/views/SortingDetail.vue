@@ -215,7 +215,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -233,14 +233,14 @@ const algorithmDetails = ref({
 });
 
 onMounted(() => {
-  const algorithm = route.params.algorithm as string;
+  const algorithm = (route.params.algorithm || '');
   // Set the details based on the algorithm
   const details = getAlgorithmDetails(algorithm);
   algorithmDetails.value = details;
 });
 
-function getAlgorithmDetails(algorithm: string) {
-  const details: Record<string, any> = {
+function getAlgorithmDetails(algorithm) {
+  const details = {
     'bubble-sort': {
       title: 'Bubble Sort',
       description: 'Simple Comparison-based Sorting',
@@ -251,7 +251,7 @@ function getAlgorithmDetails(algorithm: string) {
       useCase: 'Educational purposes, small datasets',
       advantage: 'Can detect whether input list is sorted or not',
       implementation: `
-function bubbleSort(arr: number[]): number[] {
+function bubbleSort(arr) {
   const n = arr.length;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n - i - 1; j++) {
@@ -273,7 +273,7 @@ function bubbleSort(arr: number[]): number[] {
       useCase: 'Small datasets, when memory space is limited',
       advantage: 'In-place sort (requires no additional storage space)',
       implementation: `
-function selectionSort(arr: number[]): number[] {
+function selectionSort(arr) {
   const n = arr.length;
   for (let i = 0; i < n - 1; i++) {
     let minIdx = i;
@@ -299,7 +299,7 @@ function selectionSort(arr: number[]): number[] {
       useCase: 'Small datasets, partially sorted datasets',
       advantage: 'Simple implementation and efficient for small data sets',
       implementation: `
-function insertionSort(arr: number[]): number[] {
+function insertionSort(arr) {
   const n = arr.length;
   for (let i = 1; i < n; i++) {
     const key = arr[i];
@@ -323,7 +323,7 @@ function insertionSort(arr: number[]): number[] {
       useCase: 'Large datasets, linked lists',
       advantage: 'Consistent performance and stable sorting',
       implementation: `
-function mergeSort(arr: number[]): number[] {
+function mergeSort(arr) {
   if (arr.length <= 1) return arr;
   
   const mid = Math.floor(arr.length / 2);
@@ -333,8 +333,8 @@ function mergeSort(arr: number[]): number[] {
   return merge(left, right);
 }
 
-function merge(left: number[], right: number[]): number[] {
-  const result: number[] = [];
+function merge(left, right) {
+  const result = [];
   let i = 0, j = 0;
   
   while (i < left.length && j < right.length) {
@@ -358,7 +358,7 @@ function merge(left: number[], right: number[]): number[] {
       useCase: 'Large datasets, when average performance is critical',
       advantage: 'Efficient in-place sorting with good average case performance',
       implementation: `
-function quickSort(arr: number[], low = 0, high = arr.length - 1): number[] {
+function quickSort(arr, low = 0, high = arr.length - 1) {
   if (low < high) {
     const pivotIndex = partition(arr, low, high);
     quickSort(arr, low, pivotIndex - 1);
@@ -367,7 +367,7 @@ function quickSort(arr: number[], low = 0, high = arr.length - 1): number[] {
   return arr;
 }
 
-function partition(arr: number[], low: number, high: number): number {
+function partition(arr, low: number, high: number): number {
   const pivot = arr[high];
   let i = low - 1;
   
@@ -392,7 +392,7 @@ function partition(arr: number[], low: number, high: number): number {
       useCase: 'Large datasets, when memory usage is a concern',
       advantage: 'In-place sorting with guaranteed O(n log n) performance',
       implementation: `
-function heapSort(arr: number[]): number[] {
+function heapSort(arr) {
   const n = arr.length;
   
   // Build max heap
@@ -409,7 +409,7 @@ function heapSort(arr: number[]): number[] {
   return arr;
 }
 
-function heapify(arr: number[], n: number, i: number): void {
+function heapify(arr, n: number, i: number): void {
   let largest = i;
   const left = 2 * i + 1;
   const right = 2 * i + 2;
@@ -430,9 +430,9 @@ function heapify(arr: number[], n: number, i: number): void {
 
 const showDemo = ref(false);
 const inputArray = ref('');
-const sortedArray = ref<number[]>([]);
+const sortedArray = ref([]);
 const isSorting = ref(false);
-const originalArray = ref<number[]>([]);
+const originalArray = ref([]);
 const sortingStats = ref({
   executionTime: 0,
   arraySize: 0,
@@ -457,7 +457,7 @@ const runDemo = () => {
   showDemo.value = true;
 };
 
-const getBarHeight = (num: number) => {
+const getBarHeight = (num) => {
   const maxNum = Math.max(...originalArray.value, ...sortedArray.value);
   return Math.max((num / maxNum) * 95, 8); // Ensures minimum height of 8% and maximum of 95%
 };
@@ -491,7 +491,7 @@ const runSort = async () => {
     // Add artificial delay to allow UI to update
     await new Promise(resolve => setTimeout(resolve, 0));
 
-    const currentAlgorithm = route.params.algorithm as string;
+    const currentAlgorithm = route.params.algorithm;
     
     // Sort based on the selected algorithm
     switch(currentAlgorithm) {
@@ -564,7 +564,7 @@ const runSort = async () => {
 };
 
 // Update the stats display to show microsecond precision
-const formatExecutionTime = (time: number) => {
+const formatExecutionTime = (time) => {
   if (time < 0.001) return '< 0.001ms';
   if (time < 1) return `${time.toFixed(3)}ms`;
   return `${Math.round(time)}ms`;
@@ -572,13 +572,13 @@ const formatExecutionTime = (time: number) => {
 
 // Update your template where execution time is displayed
 const getExpectedTime = () => {
-  const algorithm = route.params.algorithm as string;
+  const algorithm = route.params.algorithm;
   const n = sortingStats.value.arraySize;
   
   // More realistic base times in milliseconds
   const baseTime = 0.0001; // 0.1 microsecond base operation time
   
-  const timeMap: Record<string, number> = {
+  const timeMap = {
     'bubble-sort': baseTime * n * n,
     'selection-sort': baseTime * n * n,
     'insertion-sort': baseTime * n * n / 2,
@@ -594,7 +594,7 @@ const getExpectedTime = () => {
 };
 
 // Implement sorting algorithms with stats tracking
-const bubbleSort = (arr: number[], stats: any) => {
+const bubbleSort = (arr, stats) => {
   const n = arr.length;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n - i - 1; j++) {
@@ -608,7 +608,7 @@ const bubbleSort = (arr: number[], stats: any) => {
   return arr;
 };
 
-const selectionSort = (arr: number[], stats: any) => {
+const selectionSort = (arr, stats) => {
   const n = arr.length;
   for (let i = 0; i < n - 1; i++) {
     let minIdx = i;
@@ -626,7 +626,7 @@ const selectionSort = (arr: number[], stats: any) => {
   return arr;
 };
 
-const insertionSort = (arr: number[], stats: any) => {
+const insertionSort = (arr, stats) => {
   const n = arr.length;
   for (let i = 1; i < n; i++) {
     const key = arr[i];
@@ -641,18 +641,18 @@ const insertionSort = (arr: number[], stats: any) => {
   return arr;
 };
 
-const mergeSort = (arr: number[], stats: any): number[] => {
+const mergeSort = (arr, stats) => {
   if (arr.length <= 1) return arr;
   
   const mid = Math.floor(arr.length / 2);
-  const left: number[] = mergeSort(arr.slice(0, mid), stats);
+  const left = mergeSort(arr.slice(0, mid), stats);
   const right = mergeSort(arr.slice(mid), stats);
   
   return merge(left, right, stats);
 };
 
-const merge = (left: number[], right: number[], stats: any) => {
-  const result: number[] = [];
+const merge = (left, right, stats) => {
+  const result = [];
   let i = 0, j = 0;
   
   while (i < left.length && j < right.length) {
@@ -668,7 +668,7 @@ const merge = (left: number[], right: number[], stats: any) => {
   return [...result, ...left.slice(i), ...right.slice(j)];
 };
 
-const quickSort = (arr: number[], stats: any, low = 0, high = arr.length - 1) => {
+const quickSort = (arr, stats, low = 0, high = arr.length - 1) => {
   if (low < high) {
     const pivotIndex = quickSortPartition(arr, low, high, stats);
     quickSort(arr, stats, low, pivotIndex - 1);
@@ -677,7 +677,7 @@ const quickSort = (arr: number[], stats: any, low = 0, high = arr.length - 1) =>
   return arr;
 };
 
-const quickSortPartition = (arr: number[], low: number, high: number, stats: any) => {
+const quickSortPartition = (arr, low, high, stats) => {
   const pivot = arr[high];
   let i = low - 1;
   
@@ -695,7 +695,7 @@ const quickSortPartition = (arr: number[], low: number, high: number, stats: any
   return i + 1;
 };
 
-const heapSort = (arr: number[], stats: any) => {
+const heapSort = (arr, stats) => {
   const n = arr.length;
   
   for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
@@ -711,7 +711,7 @@ const heapSort = (arr: number[], stats: any) => {
   return arr;
 };
 
-const heapify = (arr: number[], n: number, i: number, stats: any) => {
+const heapify = (arr, n, i, stats) => {
   let largest = i;
   const left = 2 * i + 1;
   const right = 2 * i + 2;

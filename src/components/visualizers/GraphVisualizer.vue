@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 
 const nodes = ref([
@@ -134,7 +134,7 @@ const removeVertex = () => {
     
     // Connect isolated nodes to random existing nodes
     isolatedNodes.forEach(isolatedNode => {
-      const connectedNodesList = Array.from(connectedNodes) as string[]
+      const connectedNodesList = Array.from(connectedNodes) 
       if (connectedNodesList.length > 0) {
         const randomConnectedNode = connectedNodesList[
           Math.floor(Math.random() * connectedNodesList.length)

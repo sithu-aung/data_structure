@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -64,7 +64,7 @@ const sortingAlgorithms = [
   }
 ];
 
-function goToDetail(algorithm: string) {
+function goToDetail(algorithm) {
   router.push({ name: 'SortingDetail', params: { algorithm } });
 }
 </script>

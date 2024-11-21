@@ -1,18 +1,18 @@
-<script setup lang="ts">
+<script setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChallengesStore } from '../stores/challenges'
 import ChallengeEditor from '../components/ChallengeEditor.vue'
 
 const route = useRoute()
-const type = computed(() => route.params.type as string)
+const type = computed(() => route.params.type)
 const challengesStore = useChallengesStore()
 
 const selectedChallenge = ref(null)
 
 const challenges = computed(() => challengesStore.challenges[type.value] || [])
 
-const selectChallenge = (challenge: any) => {
+const selectChallenge = (challenge) => {
   selectedChallenge.value = challenge
 }
 </script>

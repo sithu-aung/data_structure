@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 
-const queue = ref<string[]>([])
+const queue = ref([])
 
 const enqueue = () => {
   const value = String.fromCharCode(65 + queue.value.length)

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import DataStructureCard from '../components/DataStructureCard.vue'
 
 const dataStructures = [

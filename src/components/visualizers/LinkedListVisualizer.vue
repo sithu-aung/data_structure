@@ -1,12 +1,8 @@
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted, watch } from 'vue'
 
-interface Node {
-  id: number
-  value: string
-}
 
-const nodes = ref<Node[]>([
+const nodes = ref([
   { id: 1, value: 'A' },
   { id: 2, value: 'B' },
   { id: 3, value: 'C' }
