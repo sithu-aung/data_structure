@@ -131,80 +131,109 @@
               </div>
             </div>
 
-            <!-- Results Section -->
-            <div v-if="sortedArray.length" class="space-y-6">
-              <!-- Stats Card -->
-              <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-4 border border-gray-700/50">
-                <div class="flex flex-wrap gap-4">
-                  <div class="flex items-center space-x-2 bg-gray-900/50 px-3 py-2 rounded-lg">
-                    <div class="text-sm text-gray-400">Time:</div>
-                    <div class="text-sm font-semibold text-purple-400">
-                      {{ formatExecutionTime(sortingStats.executionTime) }}
-                    </div>
-                  </div>
-                  <div class="flex items-center space-x-2 bg-gray-900/50 px-3 py-2 rounded-lg">
-                    <div class="text-sm text-gray-400">Size:</div>
-                    <div class="text-sm font-semibold text-purple-400">
-                      {{ sortingStats.arraySize }}
-                    </div>
-                  </div>
-                  <div class="flex items-center space-x-2 bg-gray-900/50 px-3 py-2 rounded-lg">
-                    <div class="text-sm text-gray-400">Comparisons:</div>
-                    <div class="text-sm font-semibold text-purple-400">
-                      {{ sortingStats.comparisons }}
-                    </div>
-                  </div>
-                  <div class="flex items-center space-x-2 bg-gray-900/50 px-3 py-2 rounded-lg">
-                    <div class="text-sm text-gray-400">Swaps:</div>
-                    <div class="text-sm font-semibold text-purple-400">
-                      {{ sortingStats.swaps }}
-                    </div>
+            <!-- Result View -->
+            <div v-if="currentArray.length > 0 && !isGeneratingNew" class="mt-8 space-y-6">
+              <!-- Stats -->
+              <div class="flex justify-center space-x-8 text-sm">
+                <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-300">
+                  Time: {{ sortingStats.executionTime }}ms
+                </span>
+                <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-300">
+                  Comparisons: {{ sortingStats.comparisons }}
+                </span>
+                <span class="px-3 py-1.5 rounded-lg bg-green-500/10 text-green-300">
+                  Swaps: {{ sortingStats.swaps }}
+                </span>
+              </div>
+
+              <!-- Original Array -->
+              <div class="space-y-2">
+                <p class="text-sm text-gray-400 font-medium">Original Array:</p>
+                <div class="flex justify-center space-x-2">
+                  <div 
+                    v-for="(num, index) in originalArray" 
+                    :key="'original-' + index"
+                    class="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-700/50 text-white font-medium shadow-lg border border-gray-600/30"
+                  >
+                    {{ num }}
                   </div>
                 </div>
               </div>
 
-              <!-- Arrays Visualization -->
-              <div class="space-y-6">
-                <!-- Original Array -->
-                <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50">
-                  <h3 class="text-xl font-semibold mb-6 text-gray-300">Original Array</h3>
-                  <div class="flex flex-wrap gap-3">
-                    <div 
-                      v-for="num in originalArray" 
-                      :key="'original-' + num"
-                      class="relative group"
-                    >
-                      <div 
-                        class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-gray-700 to-gray-600 rounded-lg shadow-lg border border-gray-600 hover:border-gray-500 transition-all"
-                      >
-                        <span class="text-lg font-semibold text-gray-200">{{ num }}</span>
-                      </div>
-                      <div class="absolute -top-2 -right-2 bg-gray-700 text-xs px-1.5 py-0.5 rounded-full text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {{ getBarHeight(num).toFixed(0) }}%
-                      </div>
-                    </div>
+              <!-- Sorted Array -->
+              <div class="space-y-2">
+                <p class="text-sm text-gray-400 font-medium">Sorted Array:</p>
+                <div class="flex justify-center space-x-2">
+                  <div 
+                    v-for="(num, index) in sortedArray" 
+                    :key="'sorted-' + index"
+                    class="w-12 h-12 flex items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-white font-medium shadow-lg border border-purple-500/30"
+                  >
+                    {{ num }}
                   </div>
                 </div>
+              </div>
 
-                <!-- Sorted Array -->
-                <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50">
-                  <h3 class="text-xl font-semibold mb-6 text-gray-300">Sorted Array</h3>
-                  <div class="flex flex-wrap gap-3">
-                    <div 
-                      v-for="num in sortedArray" 
-                      :key="'sorted-' + num"
-                      class="relative group"
-                    >
-                      <div 
-                        class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg shadow-lg border border-purple-500/30 hover:border-purple-500/50 transition-all"
-                      >
-                        <span class="text-lg font-semibold text-white">{{ num }}</span>
-                      </div>
-                      <div class="absolute -top-2 -right-2 bg-purple-700 text-xs px-1.5 py-0.5 rounded-full text-purple-200 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {{ getBarHeight(num).toFixed(0) }}%
-                      </div>
-                    </div>
+              <!-- Divider -->
+              <div class="border-t border-gray-700/50"></div>
+
+              <!-- Visualize Steps Button -->
+              <div v-if="!showVisualization" class="flex justify-center">
+                <button 
+                  @click="startVisualization"
+                  class="px-6 py-2.5 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300 text-sm font-medium border border-purple-500/30 hover:border-purple-500/50 shadow-lg hover:shadow-purple-500/10"
+                >
+                  Visualize Steps
+                </button>
+              </div>
+
+              <!-- Visualization Section -->
+              <div v-if="showVisualization" class="space-y-6 bg-gray-800/30 rounded-xl p-6 border border-gray-700/50">
+                <h3 class="text-lg font-medium text-center bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
+                  Visualization Steps
+                </h3>
+                
+                <div class="flex justify-center space-x-2">
+                  <div 
+                    v-for="(num, index) in currentArray" 
+                    :key="index"
+                    :class="{
+                      'bg-blue-500 shadow-blue-500/30': isComparing(index),
+                      'bg-red-500 shadow-red-500/30': isSwapping(index),
+                      'bg-gray-700/50': !isComparing(index) && !isSwapping(index)
+                    }"
+                    class="w-12 h-12 flex items-center justify-center rounded-lg text-white font-medium transition-all duration-300 shadow-lg border border-gray-600/30"
+                  >
+                    {{ num }}
                   </div>
+                </div>
+                
+                <!-- Fixed height explanation box -->
+                <div class="h-[3rem] flex items-center justify-center px-4">
+                  <p class="text-center text-gray-300 text-sm">{{ currentExplanation }}</p>
+                </div>
+                
+                <!-- Control Buttons -->
+                <div class="flex justify-center space-x-4">
+                  <button 
+                    @click="prevStep"
+                    :disabled="currentStep === 0"
+                    class="px-4 py-2 rounded-lg bg-gray-700/50 hover:bg-gray-600/50 transition-colors text-sm font-medium text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-600/30"
+                  >
+                    Previous
+                  </button>
+                  <button 
+                    @click="nextStep"
+                    :disabled="currentStep >= steps.length"
+                    class="px-4 py-2 rounded-lg bg-gray-700/50 hover:bg-gray-600/50 transition-colors text-sm font-medium text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-600/30"
+                  >
+                    Next
+                  </button>
+                </div>
+                
+                <!-- Progress -->
+                <div class="text-center text-sm text-gray-400">
+                  Step {{ currentStep }} of {{ steps.length }}
                 </div>
               </div>
             </div>
@@ -435,7 +464,6 @@ const isSorting = ref(false);
 const originalArray = ref([]);
 const sortingStats = ref({
   executionTime: 0,
-  arraySize: 0,
   comparisons: 0,
   swaps: 0
 });
@@ -462,105 +490,331 @@ const getBarHeight = (num) => {
   return Math.max((num / maxNum) * 95, 8); // Ensures minimum height of 8% and maximum of 95%
 };
 
-const runSort = async () => {
-  try {
-    isSorting.value = true;
-    sortingStats.value = {
-      executionTime: 0,
-      arraySize: 0,
-      comparisons: 0,
-      swaps: 0
-    };
+const currentStep = ref(0);
+const steps = ref([]);
+const currentArray = ref([]);
+const currentExplanation = ref('');
+const showVisualization = ref(false);
 
-    const numbers = inputArray.value.split(',')
-      .map(n => parseInt(n.trim()))
-      .filter(n => !isNaN(n));
+const isGeneratingNew = ref(false);
 
-    if (numbers.length === 0) {
-      alert('Please enter valid numbers');
-      return;
-    }
+const runSort = () => {
+  const numbers = inputArray.value.split(',')
+    .map(n => parseInt(n.trim()))
+    .filter(n => !isNaN(n));
 
-    originalArray.value = [...numbers];
-    const arrayToSort = [...numbers];
-    sortingStats.value.arraySize = numbers.length;
-
-    // More precise timing using performance.now()
-    const startTime = performance.now();
-    
-    // Add artificial delay to allow UI to update
-    await new Promise(resolve => setTimeout(resolve, 0));
-
-    const currentAlgorithm = route.params.algorithm;
-    
-    // Sort based on the selected algorithm
-    switch(currentAlgorithm) {
-      case 'bubble-sort':
-        sortedArray.value = bubbleSort(arrayToSort, sortingStats.value);
-        break;
-      case 'selection-sort':
-        sortedArray.value = selectionSort(arrayToSort, sortingStats.value);
-        break;
-      case 'insertion-sort':
-        sortedArray.value = insertionSort(arrayToSort, sortingStats.value);
-        break;
-      case 'merge-sort':
-        sortedArray.value = mergeSort(arrayToSort, sortingStats.value);
-        break;
-      case 'quick-sort':
-        sortedArray.value = quickSort(arrayToSort, sortingStats.value);
-        break;
-      case 'heap-sort':
-        sortedArray.value = heapSort(arrayToSort, sortingStats.value);
-        break;
-      default:
-        throw new Error('Unknown sorting algorithm');
-    }
-
-    const endTime = performance.now();
-    
-    // Calculate execution time with microsecond precision
-    sortingStats.value.executionTime = Number((endTime - startTime).toFixed(3));
-
-    // If execution time is too small, run multiple iterations for more accurate measurement
-    if (sortingStats.value.executionTime < 1) {
-      const iterations = 1000;
-      const startBench = performance.now();
-      
-      for (let i = 0; i < iterations; i++) {
-        const testArray = [...numbers];
-        switch(currentAlgorithm) {
-          case 'bubble-sort':
-            bubbleSort(testArray, { comparisons: 0, swaps: 0 });
-            break;
-          case 'selection-sort':
-            selectionSort(testArray, { comparisons: 0, swaps: 0 });
-            break;
-          case 'insertion-sort':
-            insertionSort(testArray, { comparisons: 0, swaps: 0 });
-            break;
-          case 'merge-sort':
-            mergeSort(testArray, { comparisons: 0, swaps: 0 });
-            break;
-          case 'quick-sort':
-            quickSort(testArray, { comparisons: 0, swaps: 0 });
-            break;
-          case 'heap-sort':
-            heapSort(testArray, { comparisons: 0, swaps: 0 });
-            break;
-        }
-      }
-      
-      const endBench = performance.now();
-      sortingStats.value.executionTime = Number(((endBench - startBench) / iterations).toFixed(3));
-    }
-
-  } catch (error) {
-    console.error('Sorting error:', error);
-    alert('An error occurred while sorting');
-  } finally {
-    isSorting.value = false;
+  if (numbers.length === 0) {
+    alert('Please enter valid numbers');
+    return;
   }
+
+  // Reset stats
+  sortingStats.value = {
+    executionTime: 0,
+    comparisons: 0,
+    swaps: 0
+  };
+
+  originalArray.value = [...numbers];
+  currentArray.value = [...numbers];
+
+  // Start timing
+  const startTime = performance.now();
+  
+  // Generate steps and get sorted array
+  const arrayToSort = [...numbers];
+  steps.value = generateSortingSteps(arrayToSort, sortingStats.value);
+  sortedArray.value = arrayToSort;
+  
+  // End timing and calculate with 2 decimal places
+  const endTime = performance.now();
+  sortingStats.value.executionTime = (endTime - startTime).toFixed(2);
+
+  currentStep.value = 0;
+  showVisualization.value = false;
+  isGeneratingNew.value = false;
+};
+
+const generateSortingSteps = (arr, stats) => {
+  const steps = [];
+  const n = arr.length;
+  
+  for (let i = 0; i < n - 1; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+      // Count comparison
+      stats.comparisons++;
+      
+      steps.push({
+        type: 'compare',
+        indices: [j, j + 1],
+        explanation: `Comparing ${arr[j]} and ${arr[j + 1]}`
+      });
+      
+      if (arr[j] > arr[j + 1]) {
+        // Count swap
+        stats.swaps++;
+        
+        steps.push({
+          type: 'swap',
+          indices: [j, j + 1],
+          explanation: `Swapping ${arr[j]} and ${arr[j + 1]} because ${arr[j]} > ${arr[j + 1]}`
+        });
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      }
+    }
+  }
+  
+  return steps;
+};
+
+const bubbleSort = (arr, stats, steps) => {
+  const n = arr.length;
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+      stats.comparisons++;
+      steps.push({ type: 'compare', indices: [j, j + 1], explanation: `Comparing ${arr[j]} and ${arr[j + 1]}` });
+      if (arr[j] > arr[j + 1]) {
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+        stats.swaps++;
+        steps.push({ type: 'swap', indices: [j, j + 1], explanation: `Swapping ${arr[j]} and ${arr[j + 1]}` });
+      }
+    }
+  }
+  return arr;
+};
+
+const selectionSort = (arr, stats, steps) => {
+  const n = arr.length;
+  for (let i = 0; i < n - 1; i++) {
+    let minIdx = i;
+    for (let j = i + 1; j < n; j++) {
+      stats.comparisons++;
+      steps.push({ type: 'compare', indices: [j, minIdx], explanation: `Comparing ${arr[j]} and ${arr[minIdx]}` });
+      if (arr[j] < arr[minIdx]) {
+        minIdx = j;
+      }
+    }
+    if (minIdx !== i) {
+      [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
+      stats.swaps++;
+      steps.push({ type: 'swap', indices: [i, minIdx], explanation: `Swapping ${arr[i]} and ${arr[minIdx]}` });
+    }
+  }
+  return arr;
+};
+
+const insertionSort = (arr, stats, steps) => {
+  const n = arr.length;
+  for (let i = 1; i < n; i++) {
+    const key = arr[i];
+    let j = i - 1;
+    while (j >= 0 && (stats.comparisons++, arr[j] > key)) {
+      arr[j + 1] = arr[j];
+      stats.swaps++;
+      j--;
+    }
+    arr[j + 1] = key;
+  }
+  return arr;
+};
+
+const mergeSort = (arr, stats, steps) => {
+  if (arr.length <= 1) return arr;
+  
+  const mid = Math.floor(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid), stats, steps);
+  const right = mergeSort(arr.slice(mid), stats, steps);
+  
+  return merge(left, right, stats, steps);
+};
+
+const merge = (left, right, stats, steps) => {
+  const result = [];
+  let i = 0, j = 0;
+  
+  while (i < left.length && j < right.length) {
+    stats.comparisons++;
+    steps.push({ type: 'compare', indices: [i, j], explanation: `Comparing ${left[i]} and ${right[j]}` });
+    if (left[i] <= right[j]) {
+      result.push(left[i++]);
+    } else {
+      result.push(right[j++]);
+    }
+    stats.swaps++;
+  }
+  
+  return [...result, ...left.slice(i), ...right.slice(j)];
+};
+
+const quickSort = (arr, stats, steps, low = 0, high = arr.length - 1) => {
+  if (low < high) {
+    const pivotIndex = quickSortPartition(arr, low, high, stats, steps);
+    quickSort(arr, stats, steps, low, pivotIndex - 1);
+    quickSort(arr, stats, steps, pivotIndex + 1, high);
+  }
+  return arr;
+};
+
+const quickSortPartition = (arr, low, high, stats, steps) => {
+  const pivot = arr[high];
+  let i = low - 1;
+  
+  for (let j = low; j < high; j++) {
+    stats.comparisons++;
+    steps.push({ type: 'compare', indices: [j, high], explanation: `Comparing ${arr[j]} and ${pivot}` });
+    if (arr[j] <= pivot) {
+      i++;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      stats.swaps++;
+      steps.push({ type: 'swap', indices: [i, j], explanation: `Swapping ${arr[i]} and ${arr[j]}` });
+    }
+  }
+  
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+  stats.swaps++;
+  steps.push({ type: 'swap', indices: [i + 1, high], explanation: `Swapping ${arr[i + 1]} and ${pivot}` });
+  return i + 1;
+};
+
+const heapSort = (arr, stats, steps) => {
+  const n = arr.length;
+  
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    heapify(arr, n, i, stats, steps);
+  }
+  
+  for (let i = n - 1; i > 0; i--) {
+    [arr[0], arr[i]] = [arr[i], arr[0]];
+    stats.swaps++;
+    steps.push({ type: 'swap', indices: [0, i], explanation: `Swapping ${arr[0]} and ${arr[i]}` });
+    heapify(arr, i, 0, stats, steps);
+  }
+  
+  return arr;
+};
+
+const heapify = (arr, n, i, stats, steps) => {
+  let largest = i;
+  const left = 2 * i + 1;
+  const right = 2 * i + 2;
+  
+  stats.comparisons++;
+  steps.push({ type: 'compare', indices: [left, largest], explanation: `Comparing ${arr[left]} and ${arr[largest]}` });
+  if (left < n && arr[left] > arr[largest]) {
+    largest = left;
+  }
+  
+  stats.comparisons++;
+  steps.push({ type: 'compare', indices: [right, largest], explanation: `Comparing ${arr[right]} and ${arr[largest]}` });
+  if (right < n && arr[right] > arr[largest]) {
+    largest = right;
+  }
+  
+  if (largest !== i) {
+    [arr[i], arr[largest]] = [arr[largest], arr[i]];
+    stats.swaps++;
+    steps.push({ type: 'swap', indices: [i, largest], explanation: `Swapping ${arr[i]} and ${arr[largest]}` });
+    heapify(arr, n, largest, stats, steps);
+  }
+};
+
+const generateRandomArray = () => {
+  isGeneratingNew.value = true;
+  showVisualization.value = false;
+  currentStep.value = 0;
+  steps.value = [];
+  currentArray.value = [];
+  sortedArray.value = [];
+  originalArray.value = [];
+  currentExplanation.value = '';
+  sortingStats.value = {
+    executionTime: 0,
+    comparisons: 0,
+    swaps: 0
+  };
+
+  const length = Math.floor(Math.random() * (8 - 3 + 1)) + 3;
+  const randomNumbers = Array.from({ length }, () => Math.floor(Math.random() * 100));
+  inputArray.value = randomNumbers.join(', ');
+};
+
+const resetDemo = () => {
+  showDemo.value = false;
+  sortedArray.value = [];
+  inputArray.value = '';
+  originalArray.value = [];
+  sortingStats.value = {
+    executionTime: 0,
+    comparisons: 0,
+    swaps: 0
+  };
+  showVisualization.value = false;
+};
+
+const startVisualization = () => {
+  showVisualization.value = true;
+  currentStep.value = 0;
+  currentArray.value = [...originalArray.value]; // Reset to original array
+  updateExplanation();
+};
+
+const nextStep = () => {
+  if (currentStep.value < steps.value.length) {
+    const step = steps.value[currentStep.value];
+    if (step.type === 'swap') {
+      const [i, j] = step.indices;
+      [currentArray.value[i], currentArray.value[j]] = [currentArray.value[j], currentArray.value[i]];
+    }
+    currentStep.value++;
+    updateExplanation();
+  }
+};
+
+const prevStep = () => {
+  if (currentStep.value > 0) {
+    currentStep.value--;
+    // Reset and replay steps
+    currentArray.value = [...originalArray.value];
+    for (let i = 0; i < currentStep.value; i++) {
+      const step = steps.value[i];
+      if (step.type === 'swap') {
+        const [i, j] = step.indices;
+        [currentArray.value[i], currentArray.value[j]] = [currentArray.value[j], currentArray.value[i]];
+      }
+    }
+    updateExplanation();
+  }
+};
+
+const updateExplanation = () => {
+  if (currentStep.value === 0) {
+    currentExplanation.value = 'Starting the sorting process...';
+    return;
+  }
+
+  const step = steps.value[currentStep.value - 1];
+  if (step.type === 'compare') {
+    const [i, j] = step.indices;
+    const nums = currentArray.value;
+    currentExplanation.value = `Comparing ${nums[i]} and ${nums[j]}: ${
+      nums[i] > nums[j] 
+        ? `${nums[i]} is greater than ${nums[j]}, needs swap` 
+        : `${nums[i]} is less than or equal to ${nums[j]}, no swap needed`
+    }`;
+  } else if (step.type === 'swap') {
+    const [i, j] = step.indices;
+    currentExplanation.value = `Swapping ${currentArray.value[j]} and ${currentArray.value[i]} to maintain ascending order`;
+  }
+};
+
+const isComparing = (index) => {
+  const step = steps.value[currentStep.value - 1];
+  return step && step.type === 'compare' && step.indices.includes(index);
+};
+
+const isSwapping = (index) => {
+  const step = steps.value[currentStep.value - 1];
+  return step && step.type === 'swap' && step.indices.includes(index);
 };
 
 // Update the stats display to show microsecond precision
@@ -592,171 +846,7 @@ const getExpectedTime = () => {
          expectedMs < 1 ? `~${expectedMs.toFixed(3)}ms` : 
          `~${Math.round(expectedMs)}ms`;
 };
-
-// Implement sorting algorithms with stats tracking
-const bubbleSort = (arr, stats) => {
-  const n = arr.length;
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n - i - 1; j++) {
-      stats.comparisons++;
-      if (arr[j] > arr[j + 1]) {
-        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-        stats.swaps++;
-      }
-    }
-  }
-  return arr;
-};
-
-const selectionSort = (arr, stats) => {
-  const n = arr.length;
-  for (let i = 0; i < n - 1; i++) {
-    let minIdx = i;
-    for (let j = i + 1; j < n; j++) {
-      stats.comparisons++;
-      if (arr[j] < arr[minIdx]) {
-        minIdx = j;
-      }
-    }
-    if (minIdx !== i) {
-      [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
-      stats.swaps++;
-    }
-  }
-  return arr;
-};
-
-const insertionSort = (arr, stats) => {
-  const n = arr.length;
-  for (let i = 1; i < n; i++) {
-    const key = arr[i];
-    let j = i - 1;
-    while (j >= 0 && (stats.comparisons++, arr[j] > key)) {
-      arr[j + 1] = arr[j];
-      stats.swaps++;
-      j--;
-    }
-    arr[j + 1] = key;
-  }
-  return arr;
-};
-
-const mergeSort = (arr, stats) => {
-  if (arr.length <= 1) return arr;
-  
-  const mid = Math.floor(arr.length / 2);
-  const left = mergeSort(arr.slice(0, mid), stats);
-  const right = mergeSort(arr.slice(mid), stats);
-  
-  return merge(left, right, stats);
-};
-
-const merge = (left, right, stats) => {
-  const result = [];
-  let i = 0, j = 0;
-  
-  while (i < left.length && j < right.length) {
-    stats.comparisons++;
-    if (left[i] <= right[j]) {
-      result.push(left[i++]);
-    } else {
-      result.push(right[j++]);
-    }
-    stats.swaps++;
-  }
-  
-  return [...result, ...left.slice(i), ...right.slice(j)];
-};
-
-const quickSort = (arr, stats, low = 0, high = arr.length - 1) => {
-  if (low < high) {
-    const pivotIndex = quickSortPartition(arr, low, high, stats);
-    quickSort(arr, stats, low, pivotIndex - 1);
-    quickSort(arr, stats, pivotIndex + 1, high);
-  }
-  return arr;
-};
-
-const quickSortPartition = (arr, low, high, stats) => {
-  const pivot = arr[high];
-  let i = low - 1;
-  
-  for (let j = low; j < high; j++) {
-    stats.comparisons++;
-    if (arr[j] <= pivot) {
-      i++;
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-      stats.swaps++;
-    }
-  }
-  
-  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
-  stats.swaps++;
-  return i + 1;
-};
-
-const heapSort = (arr, stats) => {
-  const n = arr.length;
-  
-  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
-    heapify(arr, n, i, stats);
-  }
-  
-  for (let i = n - 1; i > 0; i--) {
-    [arr[0], arr[i]] = [arr[i], arr[0]];
-    stats.swaps++;
-    heapify(arr, i, 0, stats);
-  }
-  
-  return arr;
-};
-
-const heapify = (arr, n, i, stats) => {
-  let largest = i;
-  const left = 2 * i + 1;
-  const right = 2 * i + 2;
-  
-  stats.comparisons++;
-  if (left < n && arr[left] > arr[largest]) {
-    largest = left;
-  }
-  
-  stats.comparisons++;
-  if (right < n && arr[right] > arr[largest]) {
-    largest = right;
-  }
-  
-  if (largest !== i) {
-    [arr[i], arr[largest]] = [arr[largest], arr[i]];
-    stats.swaps++;
-    heapify(arr, n, largest, stats);
-  }
-};
-
-const generateRandomArray = () => {
-  const size = Math.floor(Math.random() * 8) + 5; // Random size between 5 and 12
-  const maxNum = 100;
-  const randomNumbers = Array.from(
-    { length: size }, 
-    () => Math.floor(Math.random() * maxNum) + 1
-  );
-  inputArray.value = randomNumbers.join(', ');
-};
-
-const resetDemo = () => {
-  showDemo.value = false;
-  sortedArray.value = [];
-  inputArray.value = '';
-  originalArray.value = [];
-  sortingStats.value = {
-    executionTime: 0,
-    arraySize: 0,
-    comparisons: 0,
-    swaps: 0
-  };
-};
 </script>
-
 <style scoped>
 .transition-all {
   transition-property: all;
